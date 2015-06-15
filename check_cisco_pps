@@ -1,0 +1,35 @@
+#!/bin/bash
+
+STATE_OK=$(expr 0)
+STATE_WARNING=$(expr 1)
+STATE_CRITICAL=$(expr 2)
+STATE_UNKNOWN=$(expr 3)
+
+if [ "$#" -lt "1" ] ; then
+    exit $STATE_UNKNOWN
+elif [ "$#" -eq "2" ] ; then
+    HOST=$1
+    COMMUNITY=$2
+    MODE=t
+else
+    HOST=$1
+    COMMUNITY=$2
+    IFACE=$3
+    MODE=i
+fi
+
+case "$MODE" in
+    t)
+        in=`snmpwalk -c ${COMMUNITY} -v 1 ${HOST} 1.3.6.1.4.1.9.2.2.1.1.7 | awk 'match($0, /.*INTEGER: (.*)/, a) { sum+=a[1] } END { print sum }'`
+        out=`snmpwalk -c ${COMMUNITY} -v 1 ${HOST} 1.3.6.1.4.1.9.2.2.1.1.9 | awk 'match($0, /.*INTEGER: (.*)/, a) { sum+=a[1] } END { print sum }'`
+        ;;
+    i)
+        in=`snmpwalk -c ${COMMUNITY} -v 1 ${HOST} 1.3.6.1.4.1.9.2.2.1.1.7.${IFACE} | awk 'match($0, /.*INTEGER: (.*)/, a) { print a[1] }'`
+        out=`snmpwalk -c ${COMMUNITY} -v 1 ${HOST} 1.3.6.1.4.1.9.2.2.1.1.9.${IFACE} | awk 'match($0, /.*INTEGER: (.*)/, a) { print a[1] }'`
+        ;;
+    *)
+        exit $STATE_UNKNOWN
+esac
+
+echo "OK IN=${in} OUT=${out} | IN=${in} OUT=${out}"
+exit $STATE_OK

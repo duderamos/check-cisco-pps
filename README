@@ -1,0 +1,16 @@
+check_cisco_pps
+=====================
+
+Nagios plugin which gets from Cisco Switch via SNMP the Packet Per Second rate.
+
+Example:
+
+# Cisco 2960S interface GigabitEthernet 1/0/1
+./check_cisco_pps 172.16.42.75 community 10101
+OK IN=3072 OUT=3137 | IN=3072 OUT=3137
+
+# Cisco 2960S total of all interfaces
+./check_cisco_pps 172.16.42.75 community
+OK IN=6785 OUT=7078 | IN=6785 OUT=7078
+
+Obs.: This script was only tested on Cisco 2960S.
