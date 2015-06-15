@@ -1,7 +1,7 @@
-check_cisco_pps
+# check_cisco_pps
 =====================
 
-Nagios plugin which gets from Cisco Switch via SNMP the Packet Per Second rate.
+It is a Nagios plugin which gets from Cisco Switch via SNMP the Packet Per Second rate.
 
 Example:
 
